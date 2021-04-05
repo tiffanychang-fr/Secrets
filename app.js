@@ -38,7 +38,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //Connect mongoose to locahost and create a new database called userDB
-mongoose.connect("mongodb+srv://tiffany_chang:test123@cluster0.52l7y.mongodb.net/userDB", {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
+mongoose.connect("mongodb+srv://tiffany_chang:"+process.env.DB_PASSWORD+"@cluster0.52l7y.mongodb.net/userDB", {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
 mongoose.set("useCreateIndex", true);
 
 
@@ -73,12 +73,14 @@ passport.deserializeUser(function(id, done) {
 });
 
 
+
 //USE passport-google-oauth20 to setup Google Strategy as passport plugin for easy access to Google Authentication
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/google/secrets",
-    userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
+    callbackURL: "https://cherry-cupcake-02741.herokuapp.com/auth/google/secrets",//"http://localhost:3000/auth/google/secrets",
+    userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
+    proxy: true
   },
   function(accessToken, refreshToken, profile, cb) {
     console.log(profile);
@@ -91,7 +93,8 @@ passport.use(new GoogleStrategy({
 passport.use(new FacebookStrategy({
   clientID: process.env.CLIENT_ID_FB,
   clientSecret: process.env.CLIENT_SECRET_FB,
-  callbackURL: "http://localhost:3000/auth/facebook/secrets",
+  callbackURL: "https://cherry-cupcake-02741.herokuapp.com/auth/facebook/secrets",//"http://localhost:3000/auth/facebook/secrets",
+  proxy: true
 },
 function(accessToken, refreshToken, profile, cb) {
   User.findOrCreate({ facebookId: profile.id }, function(err, user) {
