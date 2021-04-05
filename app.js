@@ -94,6 +94,7 @@ passport.use(new FacebookStrategy({
   clientID: process.env.CLIENT_ID_FB,
   clientSecret: process.env.CLIENT_SECRET_FB,
   callbackURL: "https://cherry-cupcake-02741.herokuapp.com/auth/facebook/secrets",//"http://localhost:3000/auth/facebook/secrets",
+  enableProof: true,
   proxy: true
 },
 function(accessToken, refreshToken, profile, cb) {
@@ -128,7 +129,7 @@ app.get("/auth/facebook",
 app.get("/auth/facebook/secrets",
   passport.authenticate("facebook", { failureRedirect: "/login" }),
   function(req, res) {
-    // Successful authentication, redirect home.
+      // Successful authentication, redirect home.
     res.redirect("/secrets");
   });
 
@@ -225,5 +226,5 @@ if (port == null || port == "") {
 }
 
 app.listen(port, function() {
-  console.log("Server is runniing succesfully.");
+  console.log("Server is running succesfully.");
 });
